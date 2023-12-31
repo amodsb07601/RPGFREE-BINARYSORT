@@ -1,0 +1,78 @@
+**FREE
+
+// Declare variables
+dcl-s Numbers int(5) dim(5) inz(5, 3, 1, 4, 2);
+dcl-s NbrToFind int(3) inz(1);
+dcl-s Found char(1) inz('N');
+
+// Sort the array using binary sort
+callp SortArray(Numbers);
+
+// Display the sorted array
+dsply ('Sorted Array: ' + %char(Numbers));
+
+// Search for a number using binary search
+NbrToFind = 4;
+Found = BinarySearch(Numbers : NbrToFind);
+
+// Display the search result
+if Found = 'Y';
+  dsply ('Number ' + %char(NbrToFind) + ' found in the array.');
+else;
+  dsply ('Number ' + %char(NbrToFind) + ' not found in the array.');
+endif;
+
+// Subprocedure to perform binary sort
+dcl-proc SortArray;
+  dcl-pi *n;
+    Array int(5) dim(5);
+  end-pi;
+
+  // Implement binary sort
+  dcl-s I int(5);
+  dcl-s J int(5);
+  dcl-s Temp int(3);
+
+  for I = 1 to %elem(Array) - 1;
+    for J = I + 1 to %elem(Array);
+      if Array(I) > Array(J);
+        // Swap elements
+        Temp = Array(I);
+        Array(I) = Array(J);
+        Array(J) = Temp;
+      endif;
+    endfor;
+  endfor;
+
+end-proc;
+
+// Subprocedure to perform binary search
+dcl-proc BinarySearch;
+  dcl-pi *n char(1);
+    Array int(5) dim(5);
+    ValueToFind int(3);
+  end-pi;
+
+  // Implement binary search
+  dcl-s Low int(5) inz(1);
+  dcl-s High int(5) inz(%elem(Array));
+  dcl-s Mid int(5);
+
+  Found = 'N';
+
+  dow Low <= High;
+    Mid = %int((Low + High) / 2);
+
+    if Array(Mid) = ValueToFind;
+      Found = 'Y';
+      leave;
+    elseif Array(Mid) < ValueToFind;
+      Low = Mid + 1;
+    else;
+      High = Mid - 1;
+    endif;
+  enddo;
+
+  return Found;
+
+end-proc;
